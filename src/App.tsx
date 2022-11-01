@@ -1,12 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import {useDispatch} from "react-redux";
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {v4 as uuidv4} from 'uuid';
 import store, { setMessages, setUsers } from './store';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './Chat.css';
 
-const Messages = (props: any) => props.data.map((m: any) => props.pk === m.id ? (<li key={m.pk}><strong>{m.name}</strong> : <div className="innermsg">{m.message}</div></li>) : (<li key={m.pk} className="update">{m.message}</li>));
+const Messages = (props: any) => (
+  <>
+    {props.data.map((m: any) => props.pk === m.id ? (
+      <div className="outgoing_msg" key={m.pk}>
+        <div className="sent_msg">
+          <p>{m.message} </p>
+          <span className="time_date">{m.name} | {m.time}</span> 
+        </div>
+      </div>
+    ) : (
+      <div  key={m.pk}>
+        <div className="incoming_msg">
+          <div className="incoming_msg_img"> 
+            <img src="https://ptetutorials.com/images/user-profile.png" alt="chatimg" /> 
+          </div>
+          <div className="received_msg">
+            <div className="received_withd_msg">
+              <p>{m.message}</p>
+              <span className="time_date">{m.name} | {m.time}</span></div>
+          </div>
+        </div>
+      </div>
+    ))}
+  </>
+);
 
-const Online = (props: any) => props.data.map((m: any) => <li key={m.pk}>{m.name}</li>);
+const Online = (props: any) => (
+  <>
+    {props.data.map((m: any) => (
+      <div key={m.pk} className="chat_list">
+        <div className="chat_people">
+          <div className="chat_ib">
+              <h5>{m.name}</h5>
+          </div>
+        </div>
+      </div>
+    ))}
+  </>
+);
 
 const App = () => {
   const [id, setId]: any = useState({'pk': '', 'name': ''});
@@ -15,8 +56,8 @@ const App = () => {
   const [updated, setUpdated] = useState(false);
   const dispatch = useDispatch();
 
-  const messages: any = store.getState().messages; //useSelector((state: any) => state.chat.messages);
-  const online: any = store.getState().users; // useSelector((state: any) => state.chat.users);
+  const messages: any = store.getState().messages;
+  const online: any = store.getState().users;
 
   const handleNameSubmit = (e: any) => {
     e.preventDefault();
@@ -34,8 +75,10 @@ const App = () => {
   const handleMessageSend = (e: any) => {
     e.preventDefault();
     if (messageInput !== '') {
-      dispatch(setMessages({'pk': uuidv4(), 'id': id.pk, 'name': nameInput, 'message': messageInput}));
+      const today = new Date(Date.now());
+      dispatch(setMessages({'pk': uuidv4(), 'id': id.pk, 'name': nameInput, 'message': messageInput, 'time' : today.toDateString()}));
       setMessageInput('');
+      e.target.reset();
       window.dispatchEvent( new Event('storage') );
     }
   };
@@ -48,36 +91,51 @@ const App = () => {
   }, [updated]);
 
   return id.pk !== "" ? (
-    <section style={{ display: "flex", flexDirection: "row" }}>
-      <ul id="messages">
-        <Messages data={messages} users={online} pk={id.pk} />
-      </ul>
-      <ul id="online">
-        {" "}
-        &#x1f310; : <Online data={online} />{" "}
-      </ul>
-      <div id="sendform">
-        <form onSubmit={e => handleMessageSend(e)} style={{ display: "flex" }}>
-          <input id="m" value={messageInput} onChange={(e) => {setMessageInput(e.target.value.trim())}} />
-          <button style={{ width: "75px" }} type="submit">
-            Send
-          </button>
-        </form>
+    <>
+    <div className="container">
+      <div className='messaging'>
+          <div className='inbox_msg'>
+            <div className="inbox_people">
+              <div className='inbox_chat'>
+                <Online data={online} />
+              </div>
+            </div>
+            <div className='mesgs'>
+              <div className="msg_history">
+                <Messages data={messages} users={online} pk={id.pk} />
+              </div>
+              <div className="type_msg">
+                <form onSubmit={e => handleMessageSend(e)}>
+                  <div className="input_msg_write">
+                      <input id="m" type="text" className="write_msg" onChange={(e) => {setMessageInput(e.target.value.trim())}} />
+                      <button className="msg_send_btn" type="submit"><FontAwesomeIcon icon={faPaperPlane} /></button>
+                    </div>
+                </form>
+                <br/>
+              </div>
+            </div>
+          </div>
       </div>
-    </section>
-  ) : (
-    <div style={{ textAlign: "center", margin: "30vh auto", width: "70%" }}>
-      <form onSubmit={event => handleNameSubmit(event)}>
-        <input
-          id="name"
-          onChange={e => setNameInput(e.target.value.trim())}
-          required
-          placeholder="Enter your name .."
-        />
-        <br />
-        <button type="submit">Submit</button>
-      </form>
     </div>
+    </>
+ 
+  ) : (
+    <>
+      <div style={{ textAlign: "center", margin: "30vh auto", width: "70%" }}>
+        <Form onSubmit={event => handleNameSubmit(event)}>
+          <Form.Group className="mb-3" controlId="formBasicName">
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" placeholder="Name" onChange={e => setNameInput(e.target.value.trim())} required />
+            <Form.Text className="text-muted">
+              Register Your Name
+            </Form.Text>
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            Submit
+          </Button>
+        </Form>
+      </div>
+    </>
   );
 };
 
