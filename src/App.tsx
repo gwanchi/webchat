@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {v4 as uuidv4} from 'uuid';
-import store, { setMessages, setUsers } from './store';
+import store, { setMessages, setUsers } from './store/store';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Chat.css';
 

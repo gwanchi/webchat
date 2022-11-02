@@ -1,6 +1,17 @@
-# Getting Started with Create React App
+# Getting Started with Simple Chat App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+# Technologies
+React.js, Redux Toolkit, Hooks, Redux Persist (with Local Storage), Redux State Sync.
+
+# Homepage
+## User Registration
+![Screenshot (1)](https://user-images.githubusercontent.com/8416460/199489438-a1ad498d-83d4-498b-97bd-2aec59b5c4b6.png)
+
+# Chatting Page
+## Chatting Page
+![Screenshot (2)](https://user-images.githubusercontent.com/8416460/199490223-511fa494-4900-43ff-b7b4-4aae724c9569.png)
 
 ## Available Scripts
 
