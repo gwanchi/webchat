@@ -14,7 +14,7 @@ test('Send Message to Chat', () => {
     expect(messages.length).toBeGreaterThan(initialMessagesCount);
 });
 
-test('Register a User to Chat & Delete a User from Chat', () => {
+test('Register a User to Chat and Delete a User from Chat', () => {
     let users: any = mockStore.getState().chat.users;
     const initialUsersCount = users.length;
 
